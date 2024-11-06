@@ -1,6 +1,6 @@
 # from app.persistence.repository import InMemoryRepository
 from app.persistence.repository import SQLAlchemyRepository
-from app.persistence.user_repository import UserRepository
+from app.persistence.repositories.user_repository import UserRepository
 from app.models.user import User
 # from app.models.amenity import Amenity
 # from app.models.place import Place
@@ -23,7 +23,7 @@ class HBnBFacade:
         return user
 
     def get_user(self, user_id):
-        return self.user_repo.get_user_by_id(user_id)
+        return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
         return self.user_repo.get_user_by_email(email)
