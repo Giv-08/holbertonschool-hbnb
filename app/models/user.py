@@ -41,9 +41,75 @@ class User(Base):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.password = password
         self.is_admin = is_admin
         self.places = [] # List to store user-owned places
         self.reviews = [] # List to store user-written reviews
 
         # The method will call the setter
         # self.hash_password(password)
+    @property
+    def first_name(self):
+        return self._first_name
+
+    @first_name.setter
+    def first_name(self, value):
+        if isinstance(value, str) and 0 < len(value) <= 50:
+            self._first_name = value
+        else:
+            raise ValueError(
+                "First name must be a string with a maximum length of 50 characters"
+                )
+
+    @property
+    def last_name(self):
+        return self._last_name
+
+    @last_name.setter
+    def last_name(self, value):
+        if isinstance(value, str) and 0 < len(value) <= 50:
+                self._last_name = value
+        else:
+            raise ValueError(
+                "Last name must be a string with a maximum length of 50 characters"
+                )
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        self._password = value
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, value):
+        """Setter for prop email"""
+        # calls the method in the facade object
+        from app.services import facade
+
+        # add a simple regex check for email format. Nothing too fancy.
+        is_valid_email = len(value.strip()) > 0 and re.search("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", value)
+        email_exists = facade.get_user_by_email(value.strip())
+        if is_valid_email and not email_exists:
+            self._email = value
+        else:
+            if email_exists:
+                raise ValueError("Email already exists!")
+
+            raise ValueError("Invalid email format!")
+
+    @property
+    def is_admin(self):
+        return self._is_admin
+
+    @is_admin.setter
+    def is_admin(self, value):
+        if isinstance(value, bool):
+            self._is_admin = value
+        else:
+            raise ValueError("is_admin must be a boolean value")
