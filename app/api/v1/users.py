@@ -32,7 +32,7 @@ class UserList(Resource):
             return {'error': 'Email already registered'}, 400
 
         # Validate input data
-        if not all([user_data.get('first_name'), user_data.get('last_name'), user_data.get('email')]):
+        if not all([user_data.get('first_name'), user_data.get('last_name'), user_data.get('email'), user_data.get('password')]):
             return {'error': 'Invalid input data'}, 400
 
         # the try catch is here in case setter validation fails
