@@ -73,10 +73,6 @@ class SQLAlchemyRepository(Repository):
     def get_all(self):
         return db_session.query(self.model).all()
 
-    # added new method for getting email
-    # def get_user_by_email(self, email):
-    #     return super().get_by_attribute("_email", email)
-
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
