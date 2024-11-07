@@ -16,8 +16,8 @@ class Review(Base):
     updated_at = Column(DateTime, nullable=False, default=datetime.now())
     _text = Column("text", String, nullable=False)
     _rating = Column("rating", Integer, nullable=False)
-    place_id = Column(String(36), ForeignKey('places.id'), nullable=False)
-    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    _place_id = Column("place_id", String(60), ForeignKey('places.id'), nullable=False)
+    _user_id = Column("user_id", String(60), ForeignKey('users.id'), nullable=False)
 
     def __init__(self, text, rating, place_id, user_id):
         if text is None or rating is None or place_id is None or user_id is None:

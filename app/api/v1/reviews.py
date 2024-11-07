@@ -90,7 +90,7 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """Update a review's information"""
         review_data = api.payload
-        wanted_keys_list = ['text', 'rating']
+        wanted_keys_list = ['text', 'rating', 'user_id', 'place_id']
 
         # check that required attributes are present
         if not all(name in wanted_keys_list for name in review_data):

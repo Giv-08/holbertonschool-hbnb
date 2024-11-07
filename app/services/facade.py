@@ -1,18 +1,20 @@
 from app.persistence.repository import SQLAlchemyRepository
-#from app.persistence.repositories.user_repository import UserRepository
-from app.persistence.repositories.amenity_repository import AmenityRepository
-from app.models.user import User
 from app.persistence.user_repository import UserRepository
-from app.models.amenity import Amenity
-# from app.models.place import Place
+from app.persistence.review_repository import ReviewRepository
+from app.persistence.place_repository import PlaceRepository
+from app.models.user import User
+# from app.models.amenity import Amenity
+from app.models.place import Place
+# from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.review import Review
+from app.persistence import db_session
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()  # Switched to SQLAlchemyRepository
         # self.place_repo = SQLAlchemyRepository(Place)
         # self.review_repo = SQLAlchemyRepository(Review)
-        self.amenity_repo = AmenityRepository()
+        # self.amenity_repo = AmenityRepository()
         #self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
@@ -59,19 +61,21 @@ class HBnBFacade:
 
 
     # --- Places ---
-    # def create_place(self, place_data):
-    #     place = Place(**place_data)
-    #     self.place_repo.add(place)
-    #     return place
+    def create_place(self, place_data):
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
 
-    # def get_place(self, place_id):
-    #     return self.place_repo.get(place_id)
+    def get_place(self, place_id):
+        return self.place_repo.get(place_id)
 
-    # def get_all_places(self):
-    #     return self.place_repo.get_all()
+    # add get place by owner
 
-    # def update_place(self, place_id, place_data):
-    #     self.place_repo.update(place_id, place_data)
+    def get_all_places(self):
+        return self.place_repo.get_all()
+
+    def update_place(self, place_id, place_data):
+        self.place_repo.update(place_id, place_data)
 
 
     # --- Reviews ---
@@ -89,8 +93,16 @@ class HBnBFacade:
     def get_reviews_by_place(self, place_id):
         return self.review_repo.get_by_attribute('place_id', place_id)
 
+    # add get review by user
+
     def update_review(self, review_id, review_data):
         self.review_repo.update(review_id, review_data)
 
+    # def delete_review(self, review_id):
+    #     self.review_repo.delete(review_id)
     def delete_review(self, review_id):
-        self.review_repo.delete(review_id)
+        review = db_session.query(Review).get(review_id)  # Assuming Review is your model
+        if not review:
+            raise ValueError("Review not found")
+        db_session.delete(review)
+        db_session.commit()
