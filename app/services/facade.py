@@ -1,8 +1,10 @@
 from app.persistence.repository import SQLAlchemyRepository
 from app.persistence.user_repository import UserRepository
+from app.persistence.review_repository import ReviewRepository
+from app.persistence.place_repository import PlaceRepository
 from app.models.user import User
 # from app.models.amenity import Amenity
-# from app.models.place import Place
+from app.models.place import Place
 from app.models.review import Review
 
 class HBnBFacade:
@@ -55,19 +57,19 @@ class HBnBFacade:
 
 
     # --- Places ---
-    # def create_place(self, place_data):
-    #     place = Place(**place_data)
-    #     self.place_repo.add(place)
-    #     return place
+    def create_place(self, place_data):
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
 
-    # def get_place(self, place_id):
-    #     return self.place_repo.get(place_id)
+    def get_place(self, place_id):
+        return self.place_repo.get(place_id)
 
-    # def get_all_places(self):
-    #     return self.place_repo.get_all()
+    def get_all_places(self):
+        return self.place_repo.get_all()
 
-    # def update_place(self, place_id, place_data):
-    #     self.place_repo.update(place_id, place_data)
+    def update_place(self, place_id, place_data):
+        self.place_repo.update(place_id, place_data)
 
 
     # --- Reviews ---
