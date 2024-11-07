@@ -1,8 +1,29 @@
+# """ Place model """
+
+# from app.persistence import Base
+# from app.persistence.user_repository import User
 # import uuid
 # from datetime import datetime
-# from app.models.user import User
+# from flask_bcrypt import Bcrypt
+# from sqlalchemy import Column, String, Float, DateTime, Boolean, ForeignKey
+# from sqlalchemy.orm import relationship
 
-# class Place:
+# bcrypt = Bcrypt()
+
+# class Place(Base):
+#     """ Place class """
+#     __tablename__ = 'places'
+
+#     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+#     created_at = Column(DateTime, nullable=False, default=datetime.now())
+#     updated_at = Column(DateTime, nullable=False, default=datetime.now())
+#     _title = Column("title", String, nullable=False)
+#     _description = Column("description", String, nullable=False)
+#     _price = Column("price", Float, nullable=False)
+#     _latitude = Column("latitude", Float, nullable=False)
+#     _longitude = Column("longitude", Float, nullable=False)
+#     _owner_id = Column("owner_id", ForeignKey('users.id'), nullable=False)
+
 #     def __init__(self, title, description, price, latitude, longitude, owner):
 #         if title is None or description is None or price is None or latitude is None or longitude is None or owner is None:
 #             raise ValueError("Required attributes not specified!")
@@ -111,7 +132,7 @@
 #         """Add an amenity to the place."""
 #         self.amenities.append(amenity)
 
-#     @staticmethod
-#     def place_exists(place_id):
-#         """ Search through all Places to ensure the specified place_id exists """
-#         # Unused - the facade get_place method will handle this
+    # @staticmethod
+    # def place_exists(place_id):
+    #     """ Search through all Places to ensure the specified place_id exists """
+        # Unused - the facade get_place method will handle this
