@@ -22,6 +22,7 @@ class ReviewList(Resource):
     def post(self):
         """Register a new review"""
         review_data = api.payload
+
         wanted_keys_list = ['text', 'rating', 'user_id', 'place_id']
 
         # check that required attributes are present
