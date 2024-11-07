@@ -1,7 +1,7 @@
-#from app import db
-from app.persistence import db_session
 import uuid
 from datetime import datetime, timezone
+#from app import db
+from app.persistence import db_session
 from app.persistence import Base
 from sqlalchemy import Column, String, DateTime
 

@@ -17,15 +17,15 @@ class User(Base):
 
     # Remember: if you have getters & setters for any of the attributes
     # you can't use the same name for the attributes themselves
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     _first_name = Column("first_name", String(50), nullable=False)
     _last_name = Column("last_name", String(50), nullable=False)
     _email = Column("email", String(120), nullable=False, unique=True)
     _password = Column("password", String(128), nullable=False)
     _is_admin = Column("is_admin", Boolean, default=False)
 
-    reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
-    properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
+    #reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
+    #properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
 
     def __init__(self, first_name, last_name, email, password=None, is_admin = False):
         # Note: Attributes that don't already exist will be

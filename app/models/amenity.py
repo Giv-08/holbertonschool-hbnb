@@ -1,25 +1,25 @@
 import uuid
-import re
-from app.persistence import Base
 from datetime import datetime
+from app.persistence import Base
 from sqlalchemy import Column, String, Integer
-from .base import BaseModel
-from sqlalchemy.orm import relationship
+#from sqlalchemy.orm import relationship
 
 class Amenity(Base):
     """ Amenity class """
     __tablename__ = 'amenities'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     _name = Column("name", String(50), nullable=False)
 
-    places_r = relationship("Place", back_populates='amenities_r')
+    #places_r = relationship("Place", back_populates='amenities_r')
 
     def __init__(self, name):
         if name is None:
             raise ValueError("Required attributes not specified!")
 
         self.name = name
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
     # --- Getters and Setters ---
     @property
