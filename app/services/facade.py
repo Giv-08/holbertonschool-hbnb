@@ -1,9 +1,9 @@
 from app.persistence.repository import SQLAlchemyRepository
 #from app.persistence.repositories.user_repository import UserRepository
 from app.persistence.repositories.amenity_repository import AmenityRepository
-from app.persistence.user_repository import UserRepository
 from app.models.user import User
-# from app.models.amenity import Amenity
+from app.persistence.user_repository import UserRepository
+from app.models.amenity import Amenity
 # from app.models.place import Place
 from app.models.review import Review
 
@@ -13,7 +13,7 @@ class HBnBFacade:
         # self.place_repo = SQLAlchemyRepository(Place)
         # self.review_repo = SQLAlchemyRepository(Review)
         self.amenity_repo = AmenityRepository()
-        self.place_repo = SQLAlchemyRepository(Place)
+        #self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
     # In case anyone is curious about the **

@@ -9,8 +9,11 @@ class Amenity(Base):
     """ User class """
     __tablename__ = 'amenities'
 
-    _name = Column("first_name", String(50), nullable=False)
-    _place_id = Column("place_id", ForeignKey('place.id'), nullable=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
+    updated_at = Column(DateTime, nullable=False, default=datetime.now())
+    _name = Column("name", String(50), nullable=False)
+    #_place_id = Column("place_id", ForeignKey('place.id'), nullable=False)
     # reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
     # properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
 
