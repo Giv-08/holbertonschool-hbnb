@@ -1,19 +1,11 @@
 from app.persistence.repository import SQLAlchemyRepository
-<<<<<<< HEAD
 from app.persistence.user_repository import UserRepository
 from app.persistence.review_repository import ReviewRepository
 from app.persistence.place_repository import PlaceRepository
 from app.models.user import User
 # from app.models.amenity import Amenity
 from app.models.place import Place
-=======
-#from app.persistence.repositories.user_repository import UserRepository
-from app.persistence.repositories.amenity_repository import AmenityRepository
-from app.models.user import User
-from app.persistence.user_repository import UserRepository
-from app.models.amenity import Amenity
-# from app.models.place import Place
->>>>>>> 720ab085aca5a6af209ec5532312bb2b32340549
+# from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.review import Review
 from app.persistence import db_session
 
@@ -22,7 +14,7 @@ class HBnBFacade:
         self.user_repo = UserRepository()  # Switched to SQLAlchemyRepository
         # self.place_repo = SQLAlchemyRepository(Place)
         # self.review_repo = SQLAlchemyRepository(Review)
-        self.amenity_repo = AmenityRepository()
+        # self.amenity_repo = AmenityRepository()
         #self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
