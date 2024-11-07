@@ -1,17 +1,21 @@
 from app.persistence.repository import SQLAlchemyRepository
-from app.persistence.user_repository import UserRepository
+#from app.persistence.repositories.user_repository import UserRepository
+from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.user import User
-# from app.models.amenity import Amenity
+from app.persistence.user_repository import UserRepository
+from app.models.amenity import Amenity
 # from app.models.place import Place
 from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()  # Switched to SQLAlchemyRepository
-        self.place_repo = SQLAlchemyRepository(Place)
+        # self.place_repo = SQLAlchemyRepository(Place)
+        # self.review_repo = SQLAlchemyRepository(Review)
+        self.amenity_repo = AmenityRepository()
+        #self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
-
     # In case anyone is curious about the **
     # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
 
@@ -34,24 +38,24 @@ class HBnBFacade:
         self.user_repo.update(user_id, user_data)
 
 
-    # --- Amenities ---
-    # Used during record insertion to prevent duplicate amenities
-    # def get_amenity_by_name(self, name):
-    #     return self.amenity_repo.get_by_attribute('name', name)
+    #--- Amenities ---
+    #sed during record insertion to prevent duplicate amenities
+    def get_amenity_by_name(self, name):
+        return self.amenity_repo.get_by_attribute('name', name)
 
-    # def create_amenity(self, amenity_data):
-    #     amenity = Amenity(**amenity_data)
-    #     self.amenity_repo.add(amenity)
-    #     return amenity
+    def create_amenity(self, amenity_data):
+        amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(amenity)
+        return amenity
 
-    # def get_amenity(self, amenity_id):
-    #     return self.amenity_repo.get(amenity_id)
+    def get_amenity(self, amenity_id):
+        return self.amenity_repo.get(amenity_id)
 
-    # def get_all_amenities(self):
-    #     return self.amenity_repo.get_all()
+    def get_all_amenities(self):
+        return self.amenity_repo.get_all()
 
-    # def update_amenity(self, amenity_id, amenity_data):
-    #     self.amenity_repo.update(amenity_id, amenity_data)
+    def update_amenity(self, amenity_id, amenity_data):
+        self.amenity_repo.update(amenity_id, amenity_data)
 
 
     # --- Places ---
