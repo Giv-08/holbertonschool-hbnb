@@ -1,12 +1,13 @@
 """ User model """
-
-from app.persistence import Base
 import uuid
 import re
 from datetime import datetime
+from app.persistence import Base
 from flask_bcrypt import Bcrypt
-from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy import Column, String, Boolean, Integer
 from sqlalchemy.orm import relationship
+from .base import BaseModel
+
 
 bcrypt = Bcrypt()
 
@@ -16,20 +17,18 @@ class User(Base):
 
     # Remember: if you have getters & setters for any of the attributes
     # you can't use the same name for the attributes themselves
-
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = Column(DateTime, nullable=False, default=datetime.now())
-    updated_at = Column(DateTime, nullable=False, default=datetime.now())
+    id = Column(Integer, primary_key=True, autoincrement=True)
     _first_name = Column("first_name", String(50), nullable=False)
     _last_name = Column("last_name", String(50), nullable=False)
     _email = Column("email", String(120), nullable=False, unique=True)
     _password = Column("password", String(128), nullable=False)
     _is_admin = Column("is_admin", Boolean, default=False)
-    # reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
-    # properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
+
+    reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
+    properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
 
     def __init__(self, first_name, last_name, email, password=None, is_admin = False):
-        # NOTE: Attributes that don't already exist will be
+        # Note: Attributes that don't already exist will be
         # created when called in the constructor
 
         if first_name is None or last_name is None or email is None:
@@ -50,10 +49,12 @@ class User(Base):
         # self.hash_password(password)
     @property
     def first_name(self):
+        """Getter for prop first_name"""
         return self._first_name
 
     @first_name.setter
     def first_name(self, value):
+        """Setter for prop first_name"""
         if isinstance(value, str) and 0 < len(value) <= 50:
             self._first_name = value
         else:
@@ -63,12 +64,14 @@ class User(Base):
 
     @property
     def last_name(self):
+        """Getter for prop last_name"""
         return self._last_name
 
     @last_name.setter
     def last_name(self, value):
+        """Setter for prop last_name"""
         if isinstance(value, str) and 0 < len(value) <= 50:
-                self._last_name = value
+            self._last_name = value
         else:
             raise ValueError(
                 "Last name must be a string with a maximum length of 50 characters"
@@ -76,14 +79,17 @@ class User(Base):
 
     @property
     def password(self):
+        """Getter for prop password"""
         return self._password
 
     @password.setter
     def password(self, value):
+        """Setter for prop password"""
         self._password = value
 
     @property
     def email(self):
+        """Getter for prop email"""
         return self._email
 
     @email.setter
@@ -105,10 +111,12 @@ class User(Base):
 
     @property
     def is_admin(self):
+        """Getter for prop is_admin"""
         return self._is_admin
 
     @is_admin.setter
     def is_admin(self, value):
+        """Setter for prop is_admin"""
         if isinstance(value, bool):
             self._is_admin = value
         else:

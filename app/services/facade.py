@@ -1,21 +1,20 @@
-from app.persistence.repository import SQLAlchemyRepository
-#from app.persistence.repositories.user_repository import UserRepository
-from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.user import User
-from app.persistence.user_repository import UserRepository
 from app.models.amenity import Amenity
-# from app.models.place import Place
+from app.models.place import Place
 from app.models.review import Review
+from app.persistence.repositories.user_repository import UserRepository
+from app.persistence.repositories.place_repository import PlaceRepository
+from app.persistence.repositories.review_repository import ReviewRepository
+from app.persistence.repositories.amenity_repository import AmenityRepository
+
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = UserRepository()  # Switched to SQLAlchemyRepository
-        # self.place_repo = SQLAlchemyRepository(Place)
-        # self.review_repo = SQLAlchemyRepository(Review)
+        self.user_repo = UserRepository()  
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
         self.amenity_repo = AmenityRepository()
-        #self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
-        # self.amenity_repo = SQLAlchemyRepository(Amenity)
+
     # In case anyone is curious about the **
     # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
 
@@ -58,20 +57,20 @@ class HBnBFacade:
         self.amenity_repo.update(amenity_id, amenity_data)
 
 
-    # --- Places ---
-    # def create_place(self, place_data):
-    #     place = Place(**place_data)
-    #     self.place_repo.add(place)
-    #     return place
+    #--- Places ---
+    def create_place(self, place_data):
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
 
-    # def get_place(self, place_id):
-    #     return self.place_repo.get(place_id)
+    def get_place(self, place_id):
+        return self.place_repo.get(place_id)
 
-    # def get_all_places(self):
-    #     return self.place_repo.get_all()
+    def get_all_places(self):
+        return self.place_repo.get_all()
 
-    # def update_place(self, place_id, place_data):
-    #     self.place_repo.update(place_id, place_data)
+    def update_place(self, place_id, place_data):
+        self.place_repo.update(place_id, place_data)
 
 
     # --- Reviews ---

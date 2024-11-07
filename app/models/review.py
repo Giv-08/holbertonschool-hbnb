@@ -1,9 +1,10 @@
-from app.persistence import Base
 import uuid
 from datetime import datetime
+from app.persistence import Base
 from flask_bcrypt import Bcrypt
-from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
+from .base import BaseModel
 
 bcrypt = Bcrypt()
 
@@ -11,13 +12,14 @@ class Review(Base):
     """ Review class """
     __tablename__ = 'reviews'
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = Column(DateTime, nullable=False, default=datetime.now())
-    updated_at = Column(DateTime, nullable=False, default=datetime.now())
+    id = Column(Integer, primary_key=True, autoincrement=True)
     _text = Column("text", String, nullable=False)
     _rating = Column("rating", Integer, nullable=False)
     place_id = Column(String(36), ForeignKey('places.id'), nullable=False)
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+
+    user_r = relationship("User", back_populates="reviews_r")
+    place_r = relationship("Place", back_populates="reviews_r")
 
     def __init__(self, text, rating, place_id, user_id):
         if text is None or rating is None or place_id is None or user_id is None:

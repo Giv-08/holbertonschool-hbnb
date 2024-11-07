@@ -1,29 +1,24 @@
-from app.persistence import Base
 import uuid
 import re
+from app.persistence import Base
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy import Column, String, Integer
+from .base import BaseModel
 from sqlalchemy.orm import relationship
 
 class Amenity(Base):
-    """ User class """
+    """ Amenity class """
     __tablename__ = 'amenities'
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = Column(DateTime, nullable=False, default=datetime.now())
-    updated_at = Column(DateTime, nullable=False, default=datetime.now())
+    id = Column(Integer, primary_key=True, autoincrement=True)
     _name = Column("name", String(50), nullable=False)
-    #_place_id = Column("place_id", ForeignKey('place.id'), nullable=False)
-    # reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
-    # properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
+
+    places_r = relationship("Place", back_populates='amenities_r')
 
     def __init__(self, name):
         if name is None:
             raise ValueError("Required attributes not specified!")
 
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
         self.name = name
 
     # --- Getters and Setters ---
@@ -41,7 +36,6 @@ class Amenity(Base):
             self._name = value.strip()
         else:
             raise ValueError("Invalid name length!")
-
 
     # --- Methods ---
     def save(self):
