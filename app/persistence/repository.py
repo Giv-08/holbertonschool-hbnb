@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from app.persistence import db_session
-from app.models.user import User
+
 
 class Repository(ABC):
     @abstractmethod
