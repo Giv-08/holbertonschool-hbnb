@@ -37,6 +37,9 @@ class HBnBFacade:
     def update_user(self, user_id, user_data):
         self.user_repo.update(user_id, user_data)
 
+    def delete_user(self, user_id):
+        self.user_repo.delete(user_id)
+
 
     #--- Amenities ---
     #sed during record insertion to prevent duplicate amenities
@@ -56,6 +59,9 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data):
         self.amenity_repo.update(amenity_id, amenity_data)
+
+    def delete_amenity(self, amenity_id):
+        self.amenity_repo.delete(amenity_id)
 
 
     # #--- Places ---
