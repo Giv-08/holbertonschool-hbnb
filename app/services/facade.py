@@ -3,7 +3,7 @@ from app.persistence.user_repository import UserRepository
 from app.persistence.review_repository import ReviewRepository
 from app.persistence.place_repository import PlaceRepository
 from app.models.user import User
-# from app.models.amenity import Amenity
+from app.models.amenity import Amenity
 from app.models.place import Place
 # from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.review import Review
@@ -11,12 +11,10 @@ from app.persistence import db_session
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = UserRepository()  # Switched to SQLAlchemyRepository
-        # self.place_repo = SQLAlchemyRepository(Place)
-        # self.review_repo = SQLAlchemyRepository(Review)
+        self.user_repo = UserRepository()
+        self.review_repo = ReviewRepository()
+        self.place_repo = PlaceRepository()
         # self.amenity_repo = AmenityRepository()
-        #self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
     # In case anyone is curious about the **
     # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
@@ -101,7 +99,7 @@ class HBnBFacade:
     # def delete_review(self, review_id):
     #     self.review_repo.delete(review_id)
     def delete_review(self, review_id):
-        review = db_session.query(Review).get(review_id)  # Assuming Review is your model
+        review = db_session.query(Review).get(review_id)
         if not review:
             raise ValueError("Review not found")
         db_session.delete(review)
