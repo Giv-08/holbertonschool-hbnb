@@ -98,3 +98,14 @@ class UserResource(Resource):
             return {'message': 'User updated successfully'}, 200
 
         return {'error': 'User not found'}, 404
+
+    @api.response(200, 'user deleted successfully')
+    @api.response(404, 'user not found')
+    def delete(self, user_id):
+        """Delete a user"""
+        try:
+            facade.delete_user(user_id)
+        except ValueError:
+            return { 'error': "user not found" }, 400
+
+        return {'message': 'user deleted successfully'}, 200

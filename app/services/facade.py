@@ -3,7 +3,7 @@ from app.persistence.user_repository import UserRepository
 from app.persistence.review_repository import ReviewRepository
 from app.persistence.place_repository import PlaceRepository
 from app.models.user import User
-# from app.models.amenity import Amenity
+from app.models.amenity import Amenity
 from app.models.place import Place
 # from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.review import Review
@@ -11,12 +11,10 @@ from app.persistence import db_session
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = UserRepository()  # Switched to SQLAlchemyRepository
-        # self.place_repo = SQLAlchemyRepository(Place)
-        # self.review_repo = SQLAlchemyRepository(Review)
+        self.user_repo = UserRepository()
+        self.review_repo = ReviewRepository()
+        self.place_repo = PlaceRepository()
         # self.amenity_repo = AmenityRepository()
-        #self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
     # In case anyone is curious about the **
     # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
@@ -38,6 +36,16 @@ class HBnBFacade:
 
     def update_user(self, user_id, user_data):
         self.user_repo.update(user_id, user_data)
+
+    # def delete_user(self, user_id):
+    #     self.review_repo.delete(user_id)
+
+    def delete_user(self, user_id):
+        user = db_session.query(User).get(user_id)
+        if not user:
+            raise ValueError("User not found")
+        db_session.delete(user)
+        db_session.commit()
 
 
     #--- Amenities ---
@@ -61,10 +69,24 @@ class HBnBFacade:
 
 
     # --- Places ---
+    # def create_place(self, place_data):
+    #     place = Place(**place_data)
+    #     self.place_repo.add(place)
+    #     return place
     def create_place(self, place_data):
-        place = Place(**place_data)
-        self.place_repo.add(place)
+    # Create the Place instance with owner_id (not owner)
+        place = Place(
+            title=place_data['title'],
+            description=place_data['description'],
+            price=place_data['price'],
+            latitude=place_data['latitude'],
+            longitude=place_data['longitude'],
+            owner_id=place_data['owner_id']  # Pass owner_id
+        )
+        db_session.add(place)
+        db_session.commit()
         return place
+
 
     def get_place(self, place_id):
         return self.place_repo.get(place_id)
@@ -101,7 +123,7 @@ class HBnBFacade:
     # def delete_review(self, review_id):
     #     self.review_repo.delete(review_id)
     def delete_review(self, review_id):
-        review = db_session.query(Review).get(review_id)  # Assuming Review is your model
+        review = db_session.query(Review).get(review_id)
         if not review:
             raise ValueError("Review not found")
         db_session.delete(review)
