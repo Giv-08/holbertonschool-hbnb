@@ -1,20 +1,21 @@
 from app.models.user import User
+from app.persistence import db_session
+from app.persistence.repository import SQLAlchemyRepository
 from app.models.amenity import Amenity
 #from app.models.place import Place
 #from app.models.review import Review
-from app.persistence.repositories.user_repository import UserRepository
+#from app.persistence.user_repository import UserRepository
 #from app.persistence.repositories.place_repository import PlaceRepository
 #from app.persistence.repositories.review_repository import ReviewRepository
-from app.persistence.repositories.amenity_repository import AmenityRepository
 
 
 class HBnBFacade:
     """Class that defines Facade"""
     def __init__(self):
-        self.user_repo = UserRepository()
+        self.user_repo = SQLAlchemyRepository(User)
         #self.place_repo = PlaceRepository()
         #self.review_repo = ReviewRepository()
-        self.amenity_repo = AmenityRepository()
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
 
     # In case anyone is curious about the **
     # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
@@ -38,7 +39,13 @@ class HBnBFacade:
         self.user_repo.update(user_id, user_data)
 
     def delete_user(self, user_id):
-        self.user_repo.delete(user_id)
+
+        user = db_session.query(User).get(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        db_session.delete(user)
+        db_session.commit()
 
 
     #--- Amenities ---
@@ -61,7 +68,13 @@ class HBnBFacade:
         self.amenity_repo.update(amenity_id, amenity_data)
 
     def delete_amenity(self, amenity_id):
-        self.amenity_repo.delete(amenity_id)
+
+        amenity = db_session.query(Amenity).get(amenity_id)
+        if not amenity:
+            raise ValueError("Amenity not found")
+
+        db_session.delete(amenity)
+        db_session.commit()
 
 
     # #--- Places ---

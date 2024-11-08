@@ -105,6 +105,5 @@ class UserResource(Resource):
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
-        
         facade.delete_user(user)
         return {'message': 'User deleted successfully'}, 204

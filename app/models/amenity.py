@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from app.persistence import Base
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String
 #from sqlalchemy.orm import relationship
 
 class Amenity(Base):
