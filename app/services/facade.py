@@ -2,10 +2,10 @@ from app.persistence.repository import SQLAlchemyRepository
 from app.persistence.user_repository import UserRepository
 from app.persistence.review_repository import ReviewRepository
 from app.persistence.place_repository import PlaceRepository
+from app.persistence.amenity_repository import AmenityRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
-# from app.persistence.repositories.amenity_repository import AmenityRepository
 from app.models.review import Review
 from app.persistence import db_session
 
@@ -14,7 +14,7 @@ class HBnBFacade:
         self.user_repo = UserRepository()
         self.review_repo = ReviewRepository()
         self.place_repo = PlaceRepository()
-        # self.amenity_repo = AmenityRepository()
+        self.amenity_repo = AmenityRepository()
         # self.amenity_repo = SQLAlchemyRepository(Amenity)
     # In case anyone is curious about the **
     # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
@@ -66,6 +66,9 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data):
         self.amenity_repo.update(amenity_id, amenity_data)
+    
+    def delete_amenity(self, amenity_id):
+        self.amenity_repo.delete(amenity_id)
 
 
     # --- Places ---
