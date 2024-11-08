@@ -37,6 +37,16 @@ class HBnBFacade:
     def update_user(self, user_id, user_data):
         self.user_repo.update(user_id, user_data)
 
+    # def delete_user(self, user_id):
+    #     self.review_repo.delete(user_id)
+
+    def delete_user(self, user_id):
+        user = db_session.query(User).get(user_id)
+        if not user:
+            raise ValueError("User not found")
+        db_session.delete(user)
+        db_session.commit()
+
 
     #--- Amenities ---
     #sed during record insertion to prevent duplicate amenities
@@ -59,10 +69,24 @@ class HBnBFacade:
 
 
     # --- Places ---
+    # def create_place(self, place_data):
+    #     place = Place(**place_data)
+    #     self.place_repo.add(place)
+    #     return place
     def create_place(self, place_data):
-        place = Place(**place_data)
-        self.place_repo.add(place)
+    # Create the Place instance with owner_id (not owner)
+        place = Place(
+            title=place_data['title'],
+            description=place_data['description'],
+            price=place_data['price'],
+            latitude=place_data['latitude'],
+            longitude=place_data['longitude'],
+            owner_id=place_data['owner_id']  # Pass owner_id
+        )
+        db_session.add(place)
+        db_session.commit()
         return place
+
 
     def get_place(self, place_id):
         return self.place_repo.get(place_id)
