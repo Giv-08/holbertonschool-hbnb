@@ -5,8 +5,8 @@ import uuid
 from app.persistence.user_repository import User
 from datetime import datetime
 # from flask_bcrypt import Bcrypt
-from sqlalchemy import Column, String, Float, DateTime, Boolean, ForeignKey, Table
-# from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Table
+from sqlalchemy.orm import relationship
 
 # bcrypt = Bcrypt()
 
@@ -23,6 +23,7 @@ class Place(Base):
     _latitude = Column("latitude", Float, nullable=False)
     _longitude = Column("longitude", Float, nullable=False)
     owner_id = Column("owner_id", String(60), ForeignKey('users.id'), nullable=False)
+    # owner = relationship("User", back_populates="places")
     # reviews = relationship('Review', back_populates='place')
 
     def __init__(self, title, description, price, latitude, longitude, owner_id):

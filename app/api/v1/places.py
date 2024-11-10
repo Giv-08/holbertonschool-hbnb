@@ -45,80 +45,45 @@ class PlaceList(Resource):
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     @api.response(400, 'Setter validation failure')
-    # def post(self):
-    #     # Need to add at least one user first so that we have someone in the system as an owner
-
-    #     # curl -X POST "http://127.0.0.1:5000/api/v1/users/" -H "Content-Type: application/json" -d '{"first_name": "John","last_name": "Doe","email": "john.doe@example.com"}'
-
-    #     # curl -X POST "http://127.0.0.1:5000/api/v1/places/" -H "Content-Type: application/json" -d '{"title": "Cozy Apartment","description": "A nice place to stay","price": 100.0,"latitude": 37.7749,"longitude": -122.4194,"owner_id": ""}'
-
-    #     """Register a new place"""
-    #     places_data = api.payload
-    #     wanted_keys_list = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
-
-    #     # Check whether the keys are present
-    #     if not all(name in wanted_keys_list for name in places_data):
-    #         return { 'error': "Invalid input data" }, 400
-
-    #     # check that user exists
-    #     user = facade.get_user(str(places_data.get('owner_id')))
-    #     if not user:
-    #         return { 'error': "Invalid input data - user does not exist" }, 400
-
-    #     # the try catch is here in case setter validation fails
-    #     new_place = None
-    #     try:
-    #         # NOTE: We're storing a user object in the owner slot and getting rid of owner_id
-    #         places_data['owner'] = user
-    #         del places_data['owner_id']
-
-    #         new_place = facade.create_place(places_data)
-    #     except ValueError as error:
-    #         return { 'error': "Setter validation failure: {}".format(error) }, 400
-
-    #     output = {
-    #         'id': str(new_place.id),
-    #         "title": new_place.title,
-    #         "description": new_place.description,
-    #         "price": new_place.price,
-    #         'latitude': new_place.latitude,
-    #         'longitude': new_place.longitude,
-    #         "owner_id": new_place.owner.id
-    #     }
-    #     return output, 201
     def post(self):
+        # Need to add at least one user first so that we have someone in the system as an owner
+
+        # curl -X POST "http://127.0.0.1:5000/api/v1/users/" -H "Content-Type: application/json" -d '{"first_name": "John","last_name": "Doe","email": "john.doe@example.com"}'
+
+        # curl -X POST "http://127.0.0.1:5000/api/v1/places/" -H "Content-Type: application/json" -d '{"title": "Cozy Apartment","description": "A nice place to stay","price": 100.0,"latitude": 37.7749,"longitude": -122.4194,"owner_id": ""}'
+
         """Register a new place"""
         places_data = api.payload
         wanted_keys_list = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
 
         # Check whether the keys are present
-        if not all(name in places_data for name in wanted_keys_list):
-            return {'error': "Invalid input data"}, 400
+        if not all(name in wanted_keys_list for name in places_data):
+            return { 'error': "Invalid input data" }, 400
 
-        # Check that the user exists
+        # check that user exists
         user = facade.get_user(str(places_data.get('owner_id')))
         if not user:
-            return {'error': "Invalid input data - user does not exist"}, 400
+            return { 'error': "Invalid input data - user does not exist" }, 400
 
-        # Add the owner object to places_data and remove owner_id
-        places_data['owner'] = user
-        del places_data['owner_id']  # Remove owner_id from data to prevent passing it to the model
-
-        # Try to create the new place
+        # the try catch is here in case setter validation fails
+        new_place = None
         try:
+            # NOTE: We're storing a user object in the owner slot and getting rid of owner_id
+            places_data['owner'] = user
+            del places_data['owner_id']
+
             new_place = facade.create_place(places_data)
         except ValueError as error:
-            return {'error': "Setter validation failure: {}".format(error)}, 400
+            return { 'error': "Setter validation failure: {}".format(error) }, 400
 
-        # Return the new place data in the response
         output = {
             'id': str(new_place.id),
-            'title': new_place.title,
-            'description': new_place.description,
-            'price': new_place.price,
+            "title": new_place.title,
+            "description": new_place.description,
+            "price": new_place.price,
             'latitude': new_place.latitude,
             'longitude': new_place.longitude,
-            'owner_id': new_place.owner.id  # If using relationships
+            "owner_id": new_place.owner.id
         }
         return output, 201
 
