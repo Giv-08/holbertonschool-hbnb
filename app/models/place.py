@@ -5,8 +5,8 @@ import uuid
 from app.persistence.user_repository import User
 from datetime import datetime
 # from flask_bcrypt import Bcrypt
-from sqlalchemy import Column, String, Float, DateTime, Boolean, ForeignKey, Table
-# from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Table
+from sqlalchemy.orm import relationship
 
 # bcrypt = Bcrypt()
 
@@ -22,11 +22,12 @@ class Place(Base):
     _price = Column("price", Float, nullable=False)
     _latitude = Column("latitude", Float, nullable=False)
     _longitude = Column("longitude", Float, nullable=False)
-    owner_id = Column("owner_id", String(60), ForeignKey('users.id'), nullable=False)
+    _owner_id = Column("owner_id", String(60), ForeignKey('users.id'), nullable=False)
+    # owner = relationship("User", back_populates="places")
     # reviews = relationship('Review', back_populates='place')
 
     def __init__(self, title, description, price, latitude, longitude, owner_id):
-        if title is None or description is None or price is None or latitude is None or longitude is None or owner is None:
+        if title is None or description is None or price is None or latitude is None or longitude is None or owner_id is None:
             raise ValueError("Required attributes not specified!")
 
         self.id = str(uuid.uuid4())
@@ -115,7 +116,7 @@ class Place(Base):
     @owner_id.setter
     def owner_id(self, value):
         """Setter for prop owner"""
-        if isinstance(value, User):
+        if isinstance(value, str):
             self._owner_id = value
         else:
             raise ValueError("Invalid object type passed in for owner!")

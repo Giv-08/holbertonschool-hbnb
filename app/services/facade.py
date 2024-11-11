@@ -72,24 +72,10 @@ class HBnBFacade:
 
 
     # --- Places ---
-    # def create_place(self, place_data):
-    #     place = Place(**place_data)
-    #     self.place_repo.add(place)
-    #     return place
     def create_place(self, place_data):
-    # Create the Place instance with owner_id (not owner)
-        place = Place(
-            title=place_data['title'],
-            description=place_data['description'],
-            price=place_data['price'],
-            latitude=place_data['latitude'],
-            longitude=place_data['longitude'],
-            owner_id=place_data['owner_id']  # Pass owner_id
-        )
-        db_session.add(place)
-        db_session.commit()
+        place = Place(**place_data)
+        self.place_repo.add(place)
         return place
-
 
     def get_place(self, place_id):
         return self.place_repo.get(place_id)
