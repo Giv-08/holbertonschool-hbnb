@@ -115,16 +115,16 @@ class PlaceResource(Resource):
         if not place:
             return {'error': 'Place not found'}, 404
 
-        owner = place.owner
-        if not owner:
-            return {'error': 'Place owner not found'}, 404
+        # owner = place.owner
+        # if not owner:
+        #     return {'error': 'Place owner not found'}, 404
 
-        amenities_list = []
-        for amenity in place.amenities:
-            amenities_list.append({
-                'id': str(amenity.id),
-                'name': amenity.name
-            })
+        # amenities_list = []
+        # for amenity in place.amenities:
+        #     amenities_list.append({
+        #         'id': str(amenity.id),
+        #         'name': amenity.name
+        #     })
 
         output = {
             'id': str(place.id),
@@ -132,13 +132,13 @@ class PlaceResource(Resource):
             'description': place.description,
             'latitude': place.latitude,
             'longitude': place.longitude,
-            'owner': {
-                'id': str(owner.id),
-                'first_name': owner.first_name,
-                'last_name': owner.last_name,
-                'email': owner.email
-            },
-            'amenities': amenities_list
+           # 'owner': {
+            #     'id': str(owner.id),
+            #     'first_name': owner.first_name,
+            #     'last_name': owner.last_name,
+            #     'email': owner.email
+            # },
+            #'amenities': amenities_list
         }
 
         return output, 200
@@ -169,3 +169,14 @@ class PlaceResource(Resource):
             return {'message': 'Place updated successfully'}, 200
 
         return {'error': 'Place not found'}, 404
+
+    @api.response(200, 'Place deleted successfully')
+    @api.response(404, 'Place not found')
+    def delete(self, place_id):
+        """Delete a user"""
+        try:
+            facade.delete_place(place_id)
+        except ValueError:
+            return { 'error': "Place not found" }, 400
+
+        return {'message': 'Place deleted successfully'}, 200
