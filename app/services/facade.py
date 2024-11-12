@@ -15,9 +15,6 @@ class HBnBFacade:
         self.review_repo = ReviewRepository()
         self.place_repo = PlaceRepository()
         self.amenity_repo = AmenityRepository()
-        # self.amenity_repo = SQLAlchemyRepository(Amenity)
-    # In case anyone is curious about the **
-    # https://www.geeksforgeeks.org/what-does-the-double-star-operator-mean-in-python/
 
     # --- Users ---
     def create_user(self, user_data):
@@ -47,9 +44,20 @@ class HBnBFacade:
         db_session.delete(user)
         db_session.commit()
 
+    # --- User relationships --
+    def get_user_places(self, user_id):
+        user = self.user_repo.get(user_id)
+        if not user:
+            return None
+        return user.properties_r
+    
+    def get_user_reviews(self, user_id):
+        user = self.user_repo.get(user_id)
+        if not user:
+            return None
+        return user.reviews_r
 
     #--- Amenities ---
-    #sed during record insertion to prevent duplicate amenities
     def get_amenity_by_name(self, name):
         return self.amenity_repo.get_by_attribute('name', name)
 
@@ -69,8 +77,14 @@ class HBnBFacade:
     
     def delete_amenity(self, amenity_id):
         self.amenity_repo.delete(amenity_id)
-
-
+    
+    # -- Amenity relationship ---
+    def get_place_with_amenity(self, amenity_id):
+        amenity = self.amenity_repo.get(amenity_id)
+        if not amenity:
+            return None
+        return amenity.place_r
+        
     # --- Places ---
     def create_place(self, place_data):
         place = Place(**place_data)
@@ -87,7 +101,7 @@ class HBnBFacade:
 
     def update_place(self, place_id, place_data):
         self.place_repo.update(place_id, place_data)
-    
+
     def delete_place(self, place_id):
         place = db_session.query(Place).get(place_id)
         if not place:
@@ -95,6 +109,24 @@ class HBnBFacade:
         db_session.delete(place)
         db_session.commit()
 
+    # --- Place Relationship methods ---
+    def get_place_amenities(self, place_id):
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
+        return place.amenities_r
+    
+    def get_place_reviews(self, place_id):
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
+        return place.reviews_r
+
+    def get_place_owner(self, place_id):
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
+        return place.owner_r
 
 
     # --- Reviews ---
@@ -112,16 +144,25 @@ class HBnBFacade:
     def get_reviews_by_place(self, place_id):
         return self.review_repo.get_by_attribute('place_id', place_id)
 
-    # add get review by user
-
     def update_review(self, review_id, review_data):
         self.review_repo.update(review_id, review_data)
 
-    # def delete_review(self, review_id):
-    #     self.review_repo.delete(review_id)
     def delete_review(self, review_id):
         review = db_session.query(Review).get(review_id)
         if not review:
             raise ValueError("Review not found")
         db_session.delete(review)
         db_session.commit()
+
+    # --- Review relationship methods --- 
+    def get_reviewed_place(self, review_id):
+        review = self.review_repo.get(review_id)
+        if not review:
+            return None
+        return review.place_r
+    
+    def get_review_written_by_user(self, review_id):
+        review = self.review_repo.get(review_id)
+        if not review:
+            return None
+        return review.user_r

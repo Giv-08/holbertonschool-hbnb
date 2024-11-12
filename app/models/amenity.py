@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
+from app.models.place import place_amenity
 
 class Amenity(Base):
     """ User class """
@@ -13,9 +14,7 @@ class Amenity(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.now())
     updated_at = Column(DateTime, nullable=False, default=datetime.now())
     _name = Column("name", String(50), nullable=False)
-    #_place_id = Column("place_id", ForeignKey('place.id'), nullable=False)
-    # reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
-    # properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
+    places_r = relationship('Place', secondary=place_amenity, back_populates="amenities_r")
 
     def __init__(self, name):
         if name is None:

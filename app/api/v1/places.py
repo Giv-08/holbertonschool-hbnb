@@ -180,3 +180,56 @@ class PlaceResource(Resource):
             return { 'error': "Place not found" }, 400
 
         return {'message': 'Place deleted successfully'}, 200
+
+@api.route('/<place_id>/<relationship>')
+class PlaceRelations(Resource):
+    @api.response(404, 'Unable to retrieve Amenities linked for this property')
+    @api.response(404, 'Unable to retrieve Reviews written for this property')
+    @api.response(404, 'Unable to retrieve Owner details for this property')
+    def get(self, place_id, relationship):
+        """Use relationship as placeholder"""
+        output = []
+        if relationship == "amenities":
+             # Get the list of amenities that can be found in this place
+             # curl -X GET http://localhost:5000/api/v1/places/<place_id>/amenities/
+            all_amenities = facade.get_place_amenities(place_id)
+            if not all_amenities:
+                return {'error': 'Unable to get Amenities linked to this property'}, 404
+            
+            place = facade.get_place(place_id)
+            if not place:
+                return {'error': 'Place not found'}, 404
+            
+            for amenity in all_amenities:
+                output.append({
+                    'id': str(amenity.id),
+                    'amenity': amenity.name
+                })
+
+        if relationship == "reviews":
+            # Get the list of reviews written about this place
+            # curl -X GET http://localhost:5000/api/v1/places/<place_id>/reviews/
+            all_reviews = facade.get_place_reviews(place_id)
+            if not all_reviews:
+                return {'error': 'Unable to retrieve Reviews written for this property'}, 404
+            
+            for review in all_reviews:
+                output.append({
+                    'id': str(review.id),
+                    'text': review.text,
+                    'rating': review.rating
+                })
+        
+        if relationship == "owner":
+            owner = facade.get_place_owner(place_id)
+            if not owner:
+                return {'error': 'Unable to retrieve Owner details for this property'}, 400
+            
+            output = ({
+                'id': str(owner.id),
+                'first_name': owner.first_name,
+                'last_name': owner.last_name,
+                'email': owner.email
+            })
+        
+        return output, 200 

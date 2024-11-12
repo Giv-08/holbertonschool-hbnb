@@ -25,12 +25,10 @@ class User(Base):
     _email = Column("email", String(120), nullable=False, unique=True)
     _password = Column("password", String(128), nullable=False)
     _is_admin = Column("is_admin", Boolean, default=False)
-    # reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
-    # properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
+    reviews_r = relationship("Review", back_populates="user_r", cascade="delete, delete-orphan")
+    properties_r = relationship("Place", back_populates="owner_r", cascade="delete, delete-orphan")
 
     def __init__(self, first_name, last_name, email, password=None, is_admin = False):
-        # NOTE: Attributes that don't already exist will be
-        # created when called in the constructor
 
         if first_name is None or last_name is None or email is None:
             raise ValueError("Required attributes not specified!")
@@ -46,8 +44,6 @@ class User(Base):
         self.places = [] # List to store user-owned places
         self.reviews = [] # List to store user-written reviews
 
-        # The method will call the setter
-        # self.hash_password(password)
     @property
     def first_name(self):
         return self._first_name
@@ -68,7 +64,7 @@ class User(Base):
     @last_name.setter
     def last_name(self, value):
         if isinstance(value, str) and 0 < len(value) <= 50:
-                self._last_name = value
+            self._last_name = value
         else:
             raise ValueError(
                 "Last name must be a string with a maximum length of 50 characters"
@@ -92,7 +88,6 @@ class User(Base):
         # calls the method in the facade object
         from app.services import facade
 
-        # add a simple regex check for email format. Nothing too fancy.
         is_valid_email = len(value.strip()) > 0 and re.search("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", value)
         email_exists = facade.get_user_by_email(value.strip())
         if is_valid_email and not email_exists:

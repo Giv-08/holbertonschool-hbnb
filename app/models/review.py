@@ -2,7 +2,7 @@ from app.persistence import Base
 import uuid
 from datetime import datetime
 from flask_bcrypt import Bcrypt
-from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 bcrypt = Bcrypt()
@@ -18,6 +18,8 @@ class Review(Base):
     _rating = Column("rating", Integer, nullable=False)
     _place_id = Column("place_id", String(60), ForeignKey('places.id'), nullable=False)
     _user_id = Column("user_id", String(60), ForeignKey('users.id'), nullable=False)
+    user_r = relationship('User', back_populates="reviews_r")
+    place_r = relationship('Place', back_populates="reviews_r")
 
     def __init__(self, text, rating, place_id, user_id):
         if text is None or rating is None or place_id is None or user_id is None:
@@ -40,7 +42,6 @@ class Review(Base):
     @text.setter
     def text(self, value):
         """Setter for prop text"""
-        # Can't think of any special checks to perform here tbh
         self._text = value
 
     @property
@@ -64,7 +65,6 @@ class Review(Base):
     @user_id.setter
     def user_id(self, value):
         """Setter for prop user_id"""
-        # calls the method in the facade object
         from app.services import facade
 
         user_exists = facade.get_user(value)
@@ -81,7 +81,6 @@ class Review(Base):
     @place_id.setter
     def place_id(self, value):
         """Setter for prop place_id"""
-        # calls the method in the facade object
         from app.services import facade
 
         place_exists = facade.get_place(value)
