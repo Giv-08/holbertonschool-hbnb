@@ -1,6 +1,9 @@
 ![HBNB EVOLUTION_Banner](https://github.com/user-attachments/assets/cb4ad051-12a8-4cc3-ad4e-250f15db6b4c)
 
 # Holberton AirBNB Clone 🏨
+### Diagram
+![hbnb_evo_2_db_diagram](https://github.com/user-attachments/assets/7f7caad1-6db2-4b5b-973c-910f081ad943)
+
 
 ### Overview 👓
 HBnB is a platform designed to connect property owners with potential guests, facilitating short-term rentals and unique accommodation experiences. The application encompasses several key functionalities:
