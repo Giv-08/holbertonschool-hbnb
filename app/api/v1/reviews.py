@@ -119,30 +119,48 @@ class ReviewResource(Resource):
 
         return {'message': 'Review deleted successfully'}, 200
 
-@api.route('/places/<place_id>/reviews')
-class PlaceReviewList(Resource):
-    @api.response(200, 'List of reviews for the place retrieved successfully')
-    @api.response(404, 'Place not found')
-    def get(self, place_id):
-        """Get all reviews for a specific place"""
-        # I'm going to do this the worst possible way:
-        # 1. grab all the reviews records (lol)
-        # 2. iterate them all through a loop while searching for the place_id
-        # 3. save the ones with the place_id in an array
-        # 4. print it out
-
-        all_reviews = facade.get_all_reviews()
+@api.route('/<review_id>/<relationship>/')
+class ReviewRelations(Resource):
+    @api.response(404, 'Unable to retrieve Place written about this review')
+    @api.response(404, 'Unable to retrieve Author details for this review')
+    def get(self, review_id, relationship):
         output = []
+        # PLACE
+        # curl -X GET http://localhost:5000/api/v1/reviews/<review_id>/place/
+        if relationship == "place":
+            place = facade.get_review_place(review_id)
+            if not place:
+                return {'error': 'Unable to get Place from this Review'}, 404
+            review = facade.get_review(review_id)
+            if not review:
+                return {'error': 'Unable to get the Review'}, 404
 
-        for review in all_reviews:
-            if review.place_id == place_id:
-                output.append({
-                    'id': str(review.id),
-                    'text': review.text,
-                    'rating': review.rating
-                })
+            output = {
+                'review': review.text,
+                'review_rating': review.rating,
+                'property': place.title,
+                'description': place.description,
+                'price': place.price,
+                'latitude': place.latitude,
+                'longitude': place.longitude
+            }
 
-        if len(output) == 0:
-            return { 'error': "Place not found" }, 400
+        # AUTHOR
+        # curl -X GET http://localhost:5000/api/v1/reviews/<review_id>/author/
+        elif relationship == "author":
+            author = facade.get_review_author(review_id)
+            if not author:
+                return {'error': 'Unable to get Author details for this review'}, 404
+            review = facade.get_review(review_id)
+            if not review:
+                return {'error': 'Unable to get the Review'}, 404
 
+            output = {
+                'review': review.text,
+                'review_rating': review.rating,
+                'author_id': str(author.id),
+                'first_name': author.first_name,
+                'last_name': author.last_name,
+                'email': author.email
+            }
         return output, 200
