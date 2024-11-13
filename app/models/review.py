@@ -18,6 +18,8 @@ class Review(Base):
     _rating = Column("rating", Integer, nullable=False)
     _place_id = Column("place_id", String(60), ForeignKey('places.id'), nullable=False)
     _user_id = Column("user_id", String(60), ForeignKey('users.id'), nullable=False)
+    place_r = relationship('Place', back_populates='reviews_r')
+    author_r = relationship('User', back_populates='reviews_r')
 
     def __init__(self, text, rating, place_id, user_id):
         if text is None or rating is None or place_id is None or user_id is None:

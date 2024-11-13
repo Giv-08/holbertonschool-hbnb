@@ -109,3 +109,58 @@ class UserResource(Resource):
             return { 'error': "user not found" }, 400
 
         return {'message': 'user deleted successfully'}, 200
+
+@api.route('/<user_id>/<relationship>/')
+class UserRelations(Resource):
+    @api.response(404, 'Unable to retrieve Places linked to this user')
+    # @api.response(404, 'Unable to retrieve Reviews written about this place')
+    def get(self, user_id, relationship):
+        """
+        Use relation as a placeholder
+        """
+        output = []
+        # PLACES
+        # curl -X GET http://localhost:5000/api/v1/users/<user_id>/places/
+        if relationship == "places":
+            all_places = facade.get_user_places(user_id)
+            if not all_places:
+                return {'error': 'Unable to get Places linked to this user'}, 404
+            owner = facade.get_user(user_id)
+            if not owner:
+                return {'error': 'Unable to get Owner'}, 404
+
+            for place in all_places:
+                output.append({
+                    'owner': owner.first_name,
+                    'place_id': str(place.id),
+                    'property_name': place.title,
+                    'description': place.description,
+                    'latitude': place.latitude,
+                    'longitude': place.longitude
+                })
+        # REVIEWS
+        # curl -X GET http://localhost:5000/api/v1/users/<user_id>/reviews/
+        elif relationship == "reviews":
+            all_reviews = facade.get_user_reviews(user_id)
+            if not all_reviews:
+                return {'error': 'Unable to get Reviews linked to this user'}, 404
+            author = facade.get_user(user_id)
+            if not author:
+                return {'error': 'Unable to get Owner'}, 404
+
+            for review in all_reviews:
+                place = review.place_r
+                if not place:
+                    return {'error': 'Review is not linked to any user'}, 404
+                place_owner = place.owner_r
+                if not place_owner:
+                    return {'error': 'Cannot find the owner of the property'}, 404
+                output.append({
+                    'author': author.first_name,
+                    'review_id': str(review.id),
+                    'review': review.text,
+                    'rating': review.rating,
+                    'property_name': place.title,
+                    'owner_property': place_owner.first_name
+                })
+        return output, 200

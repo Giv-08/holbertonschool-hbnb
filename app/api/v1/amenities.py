@@ -108,3 +108,28 @@ class AmenityResource(Resource):
             return { 'error': "Amenity not found" }, 400
 
         return {'message': 'Amenity deleted successfully'}, 200
+
+@api.route('/<amenity_id>/<relationship>/')
+class AmenityRelations(Resource):
+    @api.response(404, 'Unable to retrieve Places linked to this amenity')
+    def get(self, amenity_id, relationship):
+        """
+        Use relationship as a placeholder
+        """
+        output = []
+        # AMENITIES
+        # curl -X GET http://localhost:5000/api/v1/amenities/<amenity_id>/places/
+        if relationship == "places":
+            all_places = facade.get_amenity_places(amenity_id)
+            if not all_places:
+                return {'error': 'Unable to get Places linked to this amenity'}, 404
+            for place in all_places:
+                amenities = place.amenities_r
+                for amenity in amenities:
+                    output.append({
+                        'amenity': amenity.name,
+                        'place_id': str(place.id),
+                        'property': place.title,
+                        'description': place.description
+                    })
+        return output, 200
