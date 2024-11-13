@@ -7,7 +7,6 @@ from datetime import datetime
 from sqlalchemy import Column, String, Float, Integer, Boolean, DateTime, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
-<<<<<<< HEAD
 place_amenity = Table(
     "place_amenity",
     Base.metadata,
@@ -16,15 +15,6 @@ place_amenity = Table(
 )
 
 # bcrypt = Bcrypt()
-=======
-# define the many-to-many table
-place_amenity = Table(
-    'place_amenity',
-    Base.metadata,
-    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True),
-    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True)
-)
->>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
 
 class Place(Base):
     """ Place class """
@@ -39,15 +29,9 @@ class Place(Base):
     _latitude = Column("latitude", Float, nullable=False)
     _longitude = Column("longitude", Float, nullable=False)
     _owner_id = Column("owner_id", String(60), ForeignKey('users.id'), nullable=False)
-<<<<<<< HEAD
     amenities_r = relationship('Amenity', secondary=place_amenity, back_populates='places_r')
     owner_r = relationship("User", back_populates="properties_r")
     reviews_r = relationship('Review', back_populates='place_r')
-=======
-    #amenities_r = relationship("Amenity", secondary=place_amenity, back_populates = 'places_r')
-    #reviews_r = relationship("Review", back_populates="place_r")
-    #owner_r = relationship("User", back_populates="properties_r")
->>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
 
     def __init__(self, title, description, price, latitude, longitude, owner_id):
         if title is None or description is None or price is None or latitude is None or longitude is None or owner_id is None:

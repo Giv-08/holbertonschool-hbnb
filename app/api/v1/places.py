@@ -117,7 +117,6 @@ class PlaceResource(Resource):
         if not place:
             return {'error': 'Place not found'}, 404
 
-<<<<<<< HEAD
         owner = place.owner_r
         if not owner:
             return {'error': 'Owner not found'}, 404
@@ -128,18 +127,6 @@ class PlaceResource(Resource):
                 'amenity_id': str(amenity.id),
                 'name': amenity.name
             })
-=======
-        # owner = place.owner
-        # if not owner:
-        #     return {'error': 'Place owner not found'}, 404
-
-        # amenities_list = []
-        # for amenity in place.amenities:
-        #     amenities_list.append({
-        #         'id': str(amenity.id),
-        #         'name': amenity.name
-        #     })
->>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
 
         output = {
             'place_id': str(place.id),
@@ -147,7 +134,6 @@ class PlaceResource(Resource):
             'description': place.description,
             'latitude': place.latitude,
             'longitude': place.longitude,
-<<<<<<< HEAD
             'owner': {
                 'owner_id': str(owner.id),
                 'first_name': owner.first_name,
@@ -155,17 +141,19 @@ class PlaceResource(Resource):
                 'email': owner.email
             },
             'amenities': amenities_list
-=======
-           # 'owner': {
-            #     'id': str(owner.id),
-            #     'first_name': owner.first_name,
-            #     'last_name': owner.last_name,
-            #     'email': owner.email
-            # },
-            #'amenities': amenities_list
->>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
         }
         return output, 200
+
+    @api.response(200, 'Place deleted successfully')
+    @api.response(404, 'Place not found')
+    def delete(self, place_id):
+        """Delete a place"""
+        try:
+            facade.delete_place(place_id)
+        except ValueError:
+            return { 'error': "Place not found" }, 400
+
+        return {'message': 'Place deleted successfully'}, 200
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
@@ -194,7 +182,6 @@ class PlaceResource(Resource):
 
         return {'error': 'Place not found'}, 404
 
-<<<<<<< HEAD
 @api.route('/<place_id>/<relationship>/')
 class PlaceRelations(Resource):
     @api.response(404, 'Unable to retrieve Amenities linked to this property')
@@ -280,15 +267,3 @@ class PlaceRelations(Resource):
                 }
             }
         return output, 200
-=======
-    @api.response(200, 'Place deleted successfully')
-    @api.response(404, 'Place not found')
-    def delete(self, place_id):
-        """Delete a user"""
-        try:
-            facade.delete_place(place_id)
-        except ValueError:
-            return { 'error': "Place not found" }, 400
-
-        return {'message': 'Place deleted successfully'}, 200
->>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
