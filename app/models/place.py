@@ -2,12 +2,12 @@
 
 from app.persistence import Base
 import uuid
-from app.persistence.user_repository import User
 from datetime import datetime
 # from flask_bcrypt import Bcrypt
 from sqlalchemy import Column, String, Float, Integer, Boolean, DateTime, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
+<<<<<<< HEAD
 place_amenity = Table(
     "place_amenity",
     Base.metadata,
@@ -16,6 +16,15 @@ place_amenity = Table(
 )
 
 # bcrypt = Bcrypt()
+=======
+# define the many-to-many table
+place_amenity = Table(
+    'place_amenity',
+    Base.metadata,
+    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True),
+    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True)
+)
+>>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
 
 class Place(Base):
     """ Place class """
@@ -24,15 +33,21 @@ class Place(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     created_at = Column(DateTime, nullable=False, default=datetime.now())
     updated_at = Column(DateTime, nullable=False, default=datetime.now())
-    _title = Column("title", String, nullable=False)
-    _description = Column("description", String, nullable=False)
+    _title = Column("title", String(100), nullable=False)
+    _description = Column("description", String(250), nullable=False)
     _price = Column("price", Float, nullable=False)
     _latitude = Column("latitude", Float, nullable=False)
     _longitude = Column("longitude", Float, nullable=False)
     _owner_id = Column("owner_id", String(60), ForeignKey('users.id'), nullable=False)
+<<<<<<< HEAD
     amenities_r = relationship('Amenity', secondary=place_amenity, back_populates='places_r')
     owner_r = relationship("User", back_populates="properties_r")
     reviews_r = relationship('Review', back_populates='place_r')
+=======
+    #amenities_r = relationship("Amenity", secondary=place_amenity, back_populates = 'places_r')
+    #reviews_r = relationship("Review", back_populates="place_r")
+    #owner_r = relationship("User", back_populates="properties_r")
+>>>>>>> 44485bd9eb8c2b86ace4fbcdfd8869a89f2520c1
 
     def __init__(self, title, description, price, latitude, longitude, owner_id):
         if title is None or description is None or price is None or latitude is None or longitude is None or owner_id is None:
@@ -124,10 +139,7 @@ class Place(Base):
     @owner_id.setter
     def owner_id(self, value):
         """Setter for prop owner"""
-        if isinstance(value, str):
-            self._owner_id = value
-        else:
-            raise ValueError("Invalid object type passed in for owner!")
+        self._owner_id = value
 
     # --- Methods ---
     def save(self):

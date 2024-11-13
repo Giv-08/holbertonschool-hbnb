@@ -102,6 +102,14 @@ class HBnBFacade:
 
     def update_place(self, place_id, place_data):
         self.place_repo.update(place_id, place_data)
+    
+    def delete_place(self, place_id):
+        place = db_session.query(Place).get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+        db_session.delete(place)
+        db_session.commit()
+
 
     def delete_place(self, place_id):
         self.place_repo.delete(place_id)
